@@ -54,10 +54,10 @@
 
   /* ---------- Top bar + header ---------- */
   var NAV = [
-    ["index.html", "Home", "home"],
-    ["podcast.html", "Podcast", "podcast"],
-    ["archive.html", "Archive", "archive"],
-    ["reads.html", "Weekly reads", "reads"]
+    ["/", "Home", "home"],
+    ["/podcast", "Podcast", "podcast"],
+    ["/archive", "Archive", "archive"],
+    ["/reads", "Weekly reads", "reads"]
   ];
   var header = document.getElementById("site-header");
   if (header) {
@@ -67,7 +67,7 @@
         ? '<div class="topbar">New episode with ' + esc(latestEp.guest) + ' is out now. <a href="' + esc(latestEp.spotify || SITE.spotify) + '" target="_blank" rel="noopener">Listen on Spotify →</a></div>'
         : "") +
       '<header class="site-header"><nav class="wrap nav" aria-label="Main">' +
-      '<a class="brand" href="index.html"><img src="images/logo-stretched.svg" alt="Muse &amp; Bloom"></a>' +
+      '<a class="brand" href="/"><img src="images/logo-stretched.svg" alt="Muse &amp; Bloom"></a>' +
       '<button class="btn menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav-links">Menu</button>' +
       '<ul class="nav-links" id="nav-links">' +
       NAV.map(function (n) {
@@ -399,5 +399,22 @@
       "</ul></div></div>" +
       '<div class="foot-bottom"><span>© ' + new Date().getFullYear() + ' Muse &amp; Bloom</span><span class="script">' + esc(SITE.slogan) + "</span></div>" +
       "</div></footer>";
+  }
+
+  /* ---------- Clean page addresses ----------
+     On the live site, pages live at /podcast, /archive and /reads (no ".html").
+     When previewing on your computer (Live Server or opening the file),
+     links switch back to the .html files so they still work. */
+  var LOCAL = location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  var PAGES = { "/": "index.html", "/podcast": "podcast.html", "/archive": "archive.html", "/reads": "reads.html" };
+  if (LOCAL) {
+    document.querySelectorAll("a[href]").forEach(function (a) {
+      var h = a.getAttribute("href"), hash = "";
+      var i = h.indexOf("#"); if (i > -1) { hash = h.slice(i); h = h.slice(0, i); }
+      if (PAGES[h]) a.setAttribute("href", PAGES[h] + hash);
+    });
+  } else if (/(\/index)?\.html$/.test(location.pathname)) {
+    var clean = location.pathname.replace(/\/index\.html$/, "/").replace(/\.html$/, "");
+    history.replaceState(null, "", clean + location.search + location.hash);
   }
 })();
