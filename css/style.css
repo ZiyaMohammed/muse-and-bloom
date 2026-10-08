@@ -177,6 +177,14 @@ em { font-style: italic; }
 .collage .now:hover { transform: rotate(0) translateY(-3px); }
 .collage .now h4 { font-size: 20px; margin-block: 4px 8px; }
 .collage .now a { font: 700 13px/18px var(--font-sans); text-underline-offset: 3px; }
+.play-link {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; cursor: pointer;
+  font: 700 13px/18px var(--font-sans); color: var(--forest);
+  background: var(--lime); border: 2px solid var(--forest); border-radius: var(--pill);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.play-link:hover { transform: translate(-2px, -2px); box-shadow: 3px 3px 0 var(--forest); }
+.play-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--forest); color: var(--lime); display: grid; place-items: center; font-size: 9px; padding-left: 2px; }
 .bars { display: inline-flex; gap: 3px; align-items: flex-end; height: 14px; margin-left: 8px; vertical-align: middle; }
 .bars i { width: 3px; background: var(--tangerine); border-radius: 2px; animation: bar 1s ease-in-out infinite; }
 .bars i:nth-child(2) { animation-delay: .15s } .bars i:nth-child(3) { animation-delay: .3s } .bars i:nth-child(4) { animation-delay: .45s }
@@ -497,3 +505,38 @@ a.listen:hover { transform: translate(-3px, -3px) rotate(-1deg); box-shadow: 6px
 .hero h1 .script { font-size: 0.66em; }
 .letter .by { font-size: 24px; }
 .polaroid .caption { font-size: 23px; }
+
+/* ---------- On-site podcast player ---------- */
+.hidden-player { position: fixed; left: -10000px; bottom: 0; width: 300px; height: 152px; overflow: hidden; }
+.play-dot { font-size: 8px; letter-spacing: -1px; }
+
+.music-fab {
+  position: fixed; z-index: 80; right: 18px; bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  width: 58px; height: 58px; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
+  background: var(--lime); color: var(--forest); border: 2px solid var(--forest);
+  box-shadow: 4px 4px 0 var(--forest);
+  animation: fab-in .35s ease;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.music-fab:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--forest); }
+.music-fab .note { width: 26px; height: 26px; }
+.music-fab .fab-bars { display: none; gap: 3px; align-items: flex-end; height: 22px; }
+.music-fab .fab-bars i { width: 4px; background: var(--forest); border-radius: 2px; animation: bar 1s ease-in-out infinite; }
+.music-fab .fab-bars i:nth-child(2) { animation-delay: .15s; } .music-fab .fab-bars i:nth-child(3) { animation-delay: .3s; }
+body.is-playing .music-fab .note { display: none; }
+body.is-playing .music-fab .fab-bars { display: inline-flex; }
+body:not(.is-playing) .music-fab { background: var(--white); }
+@keyframes fab-in { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+body:not(.is-playing) .collage .now .bars i { animation-play-state: paused; }
+
+/* Music button hover: shows pause while playing, play while paused */
+.music-fab .ico-play, .music-fab .ico-pause { display: none; width: 24px; height: 24px; }
+.music-fab:hover .note, .music-fab:hover .fab-bars,
+.music-fab:focus-visible .note, .music-fab:focus-visible .fab-bars { display: none !important; }
+body:not(.is-playing) .music-fab:hover .ico-play, body:not(.is-playing) .music-fab:focus-visible .ico-play { display: block; }
+body.is-playing .music-fab:hover .ico-pause, body.is-playing .music-fab:focus-visible .ico-pause { display: block; }
+
+/* Sliding bands: the brand rose between each phrase */
+.marquee span::after, .marquee.brand span::after {
+  width: 24px; height: 28px; background: url("../images/rose.svg") no-repeat center / contain;
+}

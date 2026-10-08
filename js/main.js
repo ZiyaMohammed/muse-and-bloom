@@ -100,7 +100,94 @@
     now.innerHTML =
       '<div class="kicker">Now playing <span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>' +
       "<h4>" + esc(e0.title) + "</h4>" +
-      '<a href="' + esc(e0.spotify || SITE.spotify) + '" target="_blank" rel="noopener">Play episode ' + esc(e0.number) + " →</a>";
+      '<button class="play-link" type="button" aria-pressed="false" data-play="' + esc(e0.spotify || "") + '" data-label="Play episode ' + esc(e0.number) + '">' +
+      '<span class="play-dot" aria-hidden="true">▶</span> <span class="play-label">Play episode ' + esc(e0.number) + "</span></button>";
+  }
+
+  /* ---------- On-site player ----------
+     The "Play episode" button plays the newest episode right here, using
+     Spotify's official player (kept hidden). A small music button on the
+     right edge lets visitors pause or resume from anywhere on the page. */
+  var player = { ctrl: null, ready: false, wantPlay: false, playing: false, hasPlayed: false };
+  var playBtn = document.querySelector(".play-link");
+  var playUrl = playBtn ? playBtn.getAttribute("data-play") : "";
+  var epMatch = String(playUrl || "").match(/episode\/([A-Za-z0-9]+)/);
+
+  function setPlaying(on) {
+    player.playing = on;
+    document.body.classList.toggle("is-playing", on);
+    if (playBtn) {
+      playBtn.querySelector(".play-dot").textContent = on ? "❚❚" : "▶";
+      playBtn.querySelector(".play-label").textContent = on ? "Pause" : playBtn.getAttribute("data-label");
+      playBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    }
+    var fab = document.getElementById("music-fab");
+    if (fab) {
+      fab.setAttribute("aria-label", on ? "Pause the podcast" : "Play the podcast");
+      fab.setAttribute("aria-pressed", on ? "true" : "false");
+    }
+  }
+
+  function showFab() {
+    if (document.getElementById("music-fab")) return;
+    var fab = document.createElement("button");
+    fab.id = "music-fab";
+    fab.type = "button";
+    fab.className = "music-fab";
+    fab.innerHTML =
+      '<svg class="note" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="currentColor"/><circle cx="17.5" cy="16" r="2.8" fill="currentColor"/></svg>' +
+      '<span class="fab-bars" aria-hidden="true"><i></i><i></i><i></i></span>' +
+      '<svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>' +
+      '<svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="5.5" width="4" height="13" rx="1.2" fill="currentColor"/><rect x="13.5" y="5.5" width="4" height="13" rx="1.2" fill="currentColor"/></svg>';
+    fab.addEventListener("click", togglePlayer);
+    document.body.appendChild(fab);
+    setPlaying(player.playing);
+  }
+
+  function togglePlayer() {
+    showFab();
+    if (!player.ready) { player.wantPlay = true; loadPlayer(); return; }
+    if (player.playing) { player.ctrl.pause(); return; }
+    if (player.hasPlayed) player.ctrl.resume();
+    else { player.hasPlayed = true; player.ctrl.play(); }
+  }
+
+  function loadPlayer() {
+    if (!epMatch || window.__mbPlayerLoading) return;
+    window.__mbPlayerLoading = true;
+    var holder = document.createElement("div");
+    holder.className = "hidden-player";
+    holder.setAttribute("aria-hidden", "true");
+    var el = document.createElement("div");
+    holder.appendChild(el);
+    document.body.appendChild(holder);
+    window.onSpotifyIframeApiReady = function (API) {
+      API.createController(el, { uri: "spotify:episode:" + epMatch[1], width: 300, height: 152 }, function (ctrl) {
+        player.ctrl = ctrl;
+        ctrl.addListener("ready", function () {
+          player.ready = true;
+          if (player.wantPlay) { player.wantPlay = false; player.hasPlayed = true; ctrl.play(); }
+        });
+        ctrl.addListener("playback_update", function (e) {
+          setPlaying(!e.data.isPaused);
+        });
+      });
+    };
+    var sc = document.createElement("script");
+    sc.src = "https://open.spotify.com/embed/iframe-api/v1";
+    sc.async = true;
+    document.head.appendChild(sc);
+  }
+
+  if (playBtn) {
+    if (!epMatch) {
+      playBtn.addEventListener("click", function () { if (playUrl) window.open(playUrl, "_blank", "noopener"); });
+    } else {
+      playBtn.addEventListener("click", togglePlayer);
+      // Get the player ready in the background so the first click plays straight away.
+      var warm = function () { loadPlayer(); };
+      if ("requestIdleCallback" in window) requestIdleCallback(warm, { timeout: 3000 }); else setTimeout(warm, 1500);
+    }
   }
 
   /* ---------- Latest episode ---------- */
@@ -111,7 +198,6 @@
       '<div class="sticker" aria-hidden="true">new!</div>' +
       '<div class="num">' + esc(latest.number) + "</div>" +
       "<div>" +
-      '<div class="kicker">Latest episode</div>' +
       "<h3>" + esc(latest.title) + "</h3>" +
       '<div class="role">' + esc(latest.role) + "</div>" +
       '<p class="desc">' + esc(latest.description) + "</p>" +
@@ -169,7 +255,7 @@
       return (
         '<a class="letter" href="' + esc(l.url) + '" target="_blank" rel="noopener">' +
         '<span class="stamp"><img src="images/rose.svg" alt=""></span>' +
-        '<span class="kicker" style="padding-inline:6px">A letter · ' + esc(l.date) + "</span>" +
+        '<span class="kicker" style="padding-inline:6px">' + esc(l.date) + "</span>" +
         "<h3>" + esc(l.title) + "</h3>" +
         '<span class="foot"><span class="by">love, Muse &amp; Bloom</span><span>Read →</span></span></a>'
       );
@@ -281,7 +367,6 @@
     news.innerHTML =
       '<div class="wrap letter-grid">' +
       "<div>" +
-      '<div class="kicker">The letters · Free on Substack</div>' +
       '<h2>Something good in your inbox, <span class="pill-word">every week.</span></h2>' +
       "<p>Open letters, guides and stories of Muslim women in career and life. Written like a note from your older sister.</p>" +
       '<div class="btn-row" style="margin-top:28px">' +

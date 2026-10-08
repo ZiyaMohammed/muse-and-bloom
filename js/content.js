@@ -107,22 +107,26 @@ window.LETTERS = [
 window.WEEKLY_READS = [
   {
     week: "Week of 5 October 2026",
-    note: "This week we kept coming back to one idea: rest is part of the work.",
+    note: "This week is all about growing on purpose: in your deen, your work and your rest.",
     articles: [
-      { title: "Example: How to ask for time to pray at work", source: "Example source", url: "#", tag: "Faith at work",
-        why: "Simple wording you can use with a new manager." },
-      { title: "Example: What to know before your first salary talk", source: "Example source", url: "#", tag: "Career",
-        why: "Clear steps for a conversation many of us avoid." },
-      { title: "Example: Building a savings habit on an irregular income", source: "Example source", url: "#", tag: "Money",
-        why: "Practical and kind, with no jargon." }
-    ]
-  },
-  {
-    week: "Week of 28 September 2026",
-    note: "A week about courage.",
-    articles: [
-      { title: "Example: Asking for help is a skill", source: "Example source", url: "#", tag: "Growth",
-        why: "We all needed this reminder." }
+      { title: "Deenmaxing: a muslimah's guide to becoming her best self without losing herself",
+        source: "Reflecting Muslimah", url: "https://reflectingmuslimah.substack.com/p/deenmaxing-a-muslimahs-guide-to-becoming", tag: "Faith & growth",
+        why: "A new city, a new job, a new chapter. How to keep growing in your twenties without letting your deen fall to the bottom of the list. There's a checklist at the end." },
+      { title: "Muslim Women Don't Need Another Side Hustle",
+        source: "Salma Lucki", url: "https://salmalucki.substack.com/p/muslim-women-dont-need-another-side", tag: "Business",
+        why: "A push to think bigger than side income, and build real businesses in tech, education, media and finance." },
+      { title: "The Strength Trap",
+        source: "Belonging for The Muslim Woman", url: "https://janetkiwanuka.substack.com/p/the-strength-trap", tag: "Wellbeing",
+        why: "Why being the 'strong one' can lead high-achieving women to burnout, and how to rebuild on something softer." },
+      { title: "The ambitious Muslim girl's guide to building her greatest asset: her personal brand",
+        source: "Believe & Build", url: "https://yoursmalek.substack.com/p/the-ambitious-muslim-girls-guide", tag: "Career",
+        why: "A practical system for showing up online while juggling uni, work and your deen, and why the slow start is normal." },
+      { title: "i'm a hijabi: i cover my hair not my brain",
+        source: "Figuring It Out", url: "https://figuringitout9.substack.com/p/im-a-hijabi-i-cover-my-hair-not-my", tag: "Faith at work",
+        why: "A personal essay on growing to love the hijab, and the women who prove faith and ambition belong together." },
+      { title: "A Productive Day In My Life As a Muslim Woman",
+        source: "Saleem Muslimah", url: "https://rofiatibrahim.substack.com/p/a-productive-day-in-my-life", tag: "Routines",
+        why: "From Tahajjud at 4:30am to the end of the day: a warm, honest look at building a routine around faith while waiting for NYSC." }
     ]
   }
 ];
