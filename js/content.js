@@ -21,20 +21,27 @@ window.SITE = {
 
   spotify:   "https://open.spotify.com/show/6OIh0bfb83XeEVFcZMyxG8",
   apple:     "",   // paste your Apple Podcasts link here when it's live
-  youtube:   "",   // paste your YouTube link here when it's live
+  youtube:   "https://www.youtube.com/@MuseandBloom",
   substack:  "https://museandbloom.substack.com",
   instagram: "https://www.instagram.com/muse.grow/",
   hosts:     "Ziya and Fatima",
 
-  // A Google Form (or any link) where people can suggest women for the archive.
-  // Leave "" to hide the button.
-  nominate:  ""
+  // Google Forms. Leave "" to hide a button.
+  nominate:      "https://docs.google.com/forms/d/e/1FAIpQLSd44CGNmKy4MjbNMniAarYTk4k-gdnDdrPdDTRO83Zg3heJUw/viewform",  // suggest a woman for the archive
+  nominateGuest: "https://docs.google.com/forms/d/e/1FAIpQLSeDglR8l8I9nq5lF5oAPqyn_8q-vXXDNLd6EbH1-kzeuH6Rtw/viewform"   // suggest a podcast guest
 };
 
 
 /* ---------- 2. PODCAST EPISODES ----------
-   Newest episode goes at the TOP. Copy a block to add a new one. */
+   Newest episode goes at the TOP. Copy a block to add a new one.
+   season: 2 shows the episode as "S2 · E01". Episodes without a season
+   are from Season 1. */
 window.EPISODES = [
+  { season: 2, number: "01", guest: "Ziya and Fatima", title: "What's New This Season? Life Updates, Big Plans, and Muslim Women Making Moves",
+    role: "Season 2 opener with your hosts", date: "16 October 2026", length: "12 min",
+    description: "Season two is here. Ziya and Fatima share life updates, what's new at Muse & Bloom (including this website and our YouTube channel), and the conversations coming up this season.",
+    spotify: "https://open.spotify.com/episode/396b5Nou7c6Ef1Jx6L83k1", apple: "", youtube: "https://youtu.be/hfjLTReBUpY" },
+
   { number: "09", guest: "Azeeza Usman", title: "Blooming with Azeeza Usman",
     role: "Scientist and Arabic calligraphy artist", date: "3 July 2026", length: "32 min",
     description: "How Azeeza holds a science career and a calligraphy practice side by side, and what she has learned about making room for both.",
@@ -105,6 +112,30 @@ window.LETTERS = [
    "Past weeks" on the Weekly Reads page automatically.
    (These are EXAMPLES. Replace them with the articles you found.) */
 window.WEEKLY_READS = [
+  {
+    week: "Week of 19 October 2026",
+    note: "This week, softer on ourselves and braver about the women we're becoming.",
+    articles: [
+      { title: "A Love Letter to the Muslimah Who Are Too Hard on Themselves",
+        source: "Searching Soul", url: "https://searchingsoulwrites.substack.com/p/a-love-letter-to-the-muslimah-who", tag: "Wellbeing",
+        why: "On letting go of the guilt of not fixing your whole life in a day, and taking your deen seriously without punishing yourself." },
+      { title: "To Be a Muslimah, Despite the Noise",
+        source: "Tanveen", url: "https://tanveentwilightvibes.substack.com/p/to-be-a-muslimah-despite-the-noise", tag: "Womanhood",
+        why: "For every Muslim woman holding her ground between family, culture and everyone else's opinions of who she should be." },
+      { title: "Being a Muslimah in 2026",
+        source: "ToLeaps SG", url: "https://toleaps.substack.com/p/009-being-a-muslimah-in-2026", tag: "Faith & growth",
+        why: "Be ambitious, but not too much. Be independent, but not too independent. A gentle look at the mixed messages, and whose approval really matters." },
+      { title: "Who Gets To Work? (Hint: Not Everyone)",
+        source: "Amina Ali, Muslim Council of Britain", url: "https://muslimcounciluk.substack.com/p/who-gets-to-work-hint-not-everyone", tag: "Career",
+        why: "How unpaid internships and unequal access keep many young Muslims locked out of the job market." },
+      { title: "Why Muslim Women?",
+        source: "Na'ima B. Robert", url: "https://naimabrobert.substack.com/p/why-muslim-women", tag: "Voice",
+        why: "A book coach on why Muslim women aren't voiceless, and why their stories deserve to be written and published." },
+      { title: "Finding the Woman I Strive to Be in 2026",
+        source: "Jordan, Piety & Patience", url: "https://pietyandpatience.substack.com/p/finding-the-woman-i-strive-to-be", tag: "Growth",
+        why: "A revert's honest reflection on the woman she's becoming: confident, visible in her faith, and still growing." }
+    ]
+  },
   {
     week: "Week of 5 October 2026",
     note: "This week is all about growing on purpose: in your deen, your work and your rest.",

@@ -540,3 +540,9 @@ body.is-playing .music-fab:hover .ico-pause, body.is-playing .music-fab:focus-vi
 .marquee span::after, .marquee.brand span::after {
   width: 24px; height: 28px; background: url("../images/rose.svg") no-repeat center / contain;
 }
+
+/* Season label on the featured episode, and wider number slot for "S2 · E01" */
+.season-tag { background: var(--lime); margin-bottom: 4px; }
+.ep .n { font-size: 30px; white-space: nowrap; }
+.ep { grid-template-columns: minmax(72px, auto) minmax(0, 1fr) auto; }
+@media (max-width: 720px) { .ep { grid-template-columns: minmax(52px, auto) minmax(0, 1fr); } }

@@ -47,6 +47,12 @@
   all("[data-badge]").forEach(function (el) { el.outerHTML = spinBadge(el.getAttribute("data-badge")); });
   all("[data-art]").forEach(function (el) { el.innerHTML = ART[el.getAttribute("data-art")] || ""; });
 
+  /* "S2 · E01" for Season 2+ episodes, plain number for Season 1 */
+  function epLabel(ep, long) {
+    if (ep.season && ep.season > 1) return long ? "S" + ep.season + " · Episode " + ep.number : "S" + ep.season + " · E" + ep.number;
+    return long ? "episode " + ep.number : ep.number;
+  }
+
   function listenBtn(url, label, cls) {
     if (!url) return '<span class="btn is-soon" aria-disabled="true">' + label + " · soon</span>";
     return '<a class="btn ' + (cls || "") + '" href="' + esc(url) + '" target="_blank" rel="noopener">' + label + "</a>";
@@ -64,7 +70,7 @@
     var latestEp = EPISODES[0];
     header.outerHTML =
       (latestEp
-        ? '<div class="topbar">New episode with ' + esc(latestEp.guest) + ' is out now. <a href="' + esc(latestEp.spotify || SITE.spotify) + '" target="_blank" rel="noopener">Listen on Spotify →</a></div>'
+        ? '<div class="topbar">' + (latestEp.season && latestEp.season > 1 && latestEp.number === "01" ? "Season " + esc(latestEp.season) + " is here! The first episode is out now. " : "New episode with " + esc(latestEp.guest) + " is out now. ") + '<a href="' + esc(latestEp.spotify || SITE.spotify) + '" target="_blank" rel="noopener">Listen on Spotify →</a></div>'
         : "") +
       '<header class="site-header"><nav class="wrap nav" aria-label="Main">' +
       '<a class="brand" href="/"><img src="images/logo-stretched.svg" alt="Muse &amp; Bloom"></a>' +
@@ -100,8 +106,8 @@
     now.innerHTML =
       '<div class="kicker">Now playing <span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>' +
       "<h4>" + esc(e0.title) + "</h4>" +
-      '<button class="play-link" type="button" aria-pressed="false" data-play="' + esc(e0.spotify || "") + '" data-label="Play episode ' + esc(e0.number) + '">' +
-      '<span class="play-dot" aria-hidden="true">▶</span> <span class="play-label">Play episode ' + esc(e0.number) + "</span></button>";
+      '<button class="play-link" type="button" aria-pressed="false" data-play="' + esc(e0.spotify || "") + '" data-label="Play ' + esc(epLabel(e0, true)) + '">' +
+      '<span class="play-dot" aria-hidden="true">▶</span> <span class="play-label">Play ' + esc(epLabel(e0, true)) + "</span></button>";
   }
 
   /* ---------- On-site player ----------
@@ -198,6 +204,7 @@
       '<div class="sticker" aria-hidden="true">new!</div>' +
       '<div class="num">' + esc(latest.number) + "</div>" +
       "<div>" +
+      (latest.season ? '<span class="tag season-tag">Season ' + esc(latest.season) + "</span>" : "") +
       "<h3>" + esc(latest.title) + "</h3>" +
       '<div class="role">' + esc(latest.role) + "</div>" +
       '<p class="desc">' + esc(latest.description) + "</p>" +
@@ -216,7 +223,7 @@
     list.innerHTML = eps.map(function (ep) {
       return (
         '<li class="ep">' +
-        '<span class="n">' + esc(ep.number) + "</span>" +
+        '<span class="n">' + esc(epLabel(ep)) + "</span>" +
         "<div><h3>" + esc(ep.title) + "</h3>" +
         '<div class="role">' + esc(ep.role) + "</div>" +
         (limit ? "" : '<p class="desc">' + esc(ep.description) + "</p>") +
@@ -235,17 +242,18 @@
     var places = [
       ["Spotify", SITE.spotify, "Follow the show and never miss a Friday.", "l1"],
       ["Apple Podcasts", SITE.apple, "For iPhone, iPad and Mac.", "l2"],
-      ["YouTube", SITE.youtube, "Watch the full conversations.", "l3"]
+      ["YouTube", SITE.youtube, "Watch the full conversations.", "l3", "Watch →"]
     ];
     listen.innerHTML = places.map(function (p) {
       return p[1]
-        ? '<a class="listen ' + p[3] + '" href="' + esc(p[1]) + '" target="_blank" rel="noopener"><strong>' + p[0] + "</strong><span>" + p[2] + '</span><span class="go">Listen →</span></a>'
+        ? '<a class="listen ' + p[3] + '" href="' + esc(p[1]) + '" target="_blank" rel="noopener"><strong>' + p[0] + "</strong><span>" + p[2] + '</span><span class="go">' + (p[4] || "Listen →") + "</span></a>"
         : '<div class="listen is-soon ' + p[3] + '"><strong>' + p[0] + "</strong><span>" + p[2] + '</span><span class="go">Coming soon</span></div>';
     }).join("");
   }
   var podBtns = $("#podcast-buttons");
   if (podBtns) {
-    podBtns.innerHTML = listenBtn(SITE.spotify, 'Listen on Spotify <span class="arrow">→</span>', "btn-dark") + listenBtn(SITE.apple, "Apple Podcasts") + listenBtn(SITE.youtube, "YouTube");
+    podBtns.innerHTML = listenBtn(SITE.spotify, 'Listen on Spotify <span class="arrow">→</span>', "btn-dark") + listenBtn(SITE.apple, "Apple Podcasts") + listenBtn(SITE.youtube, "YouTube") +
+      (SITE.nominateGuest ? '<a class="btn btn-blush" href="' + esc(SITE.nominateGuest) + '" target="_blank" rel="noopener">Suggest a guest</a>' : "");
   }
 
   /* ---------- Letters ---------- */
