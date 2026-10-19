@@ -365,8 +365,10 @@
     search.addEventListener("input", draw);
     draw();
 
-    var nom = $("#nominate");
-    if (nom) { if (SITE.nominate) nom.href = SITE.nominate; else nom.parentNode.hidden = true; }
+    ["#nominate", "#nominate-bottom"].forEach(function (sel) {
+      var nom = $(sel);
+      if (nom) { if (SITE.nominate) nom.href = SITE.nominate; else nom.parentNode.hidden = true; }
+    });
   }
 
   /* ---------- Newsletter band (every page) ---------- */
@@ -399,8 +401,10 @@
       '<footer class="site-footer"><div class="wrap">' +
       '<div class="foot-grid">' +
       '<div><img src="images/logo-main.svg" alt="Muse &amp; Bloom"><p>' + esc(SITE.about) + "</p></div>" +
-      "<div><h4>Explore</h4><ul>" +
-      NAV.map(function (n) { return '<li><a href="' + n[0] + '">' + n[1] + "</a></li>"; }).join("") +
+      "<div><h4>Contribute</h4><ul>" +
+      (SITE.nominateGuest ? '<li><a href="' + esc(SITE.nominateGuest) + '" target="_blank" rel="noopener">Nominate a podcast guest</a></li>' : "") +
+      (SITE.nominate ? '<li><a href="' + esc(SITE.nominate) + '" target="_blank" rel="noopener">Nominate a woman for the archive</a></li>' : "") +
+      '<li><a href="/reads">Weekly reads</a></li>' +
       "</ul></div>" +
       "<div><h4>Follow along</h4><ul>" +
       follow.map(function (f) { return '<li><a href="' + esc(f[1]) + '" target="_blank" rel="noopener">' + f[0] + "</a></li>"; }).join("") +
